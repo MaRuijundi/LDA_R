@@ -19,7 +19,7 @@ articles.corpus <- tm_map(articles.corpus, removeNumbers);
 #删除空白格
 articles.corpus <- tm_map(articles.corpus, stripWhitespace);
 # 删除通用和自定义的停用词
-stopword <- c(stopwords('english'),"fn","pt","au","af","sn","ei","pd","py","vl","su","bp","ep","di","ut","er", "ti","so","ab","can","one","and","like","just","gonna","know","really","right","going","get","well","lot","actually","new",
+stopword <- c(stopwords('english'), "cancer","studi","use","ti","ab","can","one","and","like","just","gonna","know","really","right","going","get","well","lot","actually","new",
               "will","much","way","and","see","make","look",
               "also","able","say","back","got","take","great",
               "many","next","using","around","thing","two",
@@ -27,7 +27,7 @@ stopword <- c(stopwords('english'),"fn","pt","au","af","sn","ei","pd","py","vl",
               "even","still","ago","every","three","five","gonna",
               "okay","whether","seen","you","six","there","this",
               "and","but","you","want","thats","but","you",
-              "folks","sure","run","and","cancer","green","studi","logist","use");
+              "folks","sure","run","and");
 articles.corpus <- tm_map(articles.corpus, removeWords, stopword)
 articles.corpus <- tm_map(articles.corpus, stemDocument)
 
@@ -65,8 +65,8 @@ p
 library(wordcloud)
 set.seed(123)
 #limit words by specifying min frequency
-wordcloud(names(freq),freq,min.freq = 40)
-wordcloud(names(freq),freq,min.freq = 40,color = brewer.pal(6,"Dark2"))
+wordcloud(names(freq),freq,min.freq = 38)
+wordcloud(names(freq),freq,min.freq = 38,color = brewer.pal(6,"Dark2"))
 
 
 #确定主题个数---似然估计法
@@ -125,7 +125,7 @@ ldaOut.topics <- as.matrix(topics(ldaOut))
 write.csv(ldaOut.topics,file=paste("LDAGibbs",k,"DocsToTopics.csv"))
 
 # Top N terms in each topic
-ldaOut.terms <- as.matrix(terms(ldaOut,100))
+ldaOut.terms <- as.matrix(terms(ldaOut,700))
 write.csv(ldaOut.terms,file=paste("LDAGibbs",k,"TopicsToTerms.csv"))
 
 # create the visualization
