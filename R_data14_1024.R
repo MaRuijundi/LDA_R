@@ -102,38 +102,27 @@ sequ[which.max(hm_many)]
 
 
 
-
+#LDA 模型
 # Load topic models library
 library(topicmodels)
+library(quantreg)
 
-# Set parameters for Gibbs sampling
-burnin <- 4000
-iter <- 2000
-thin <- 500
-seed <-list(2003,5,63,100001,765)
-nstart <- 5
-best <- TRUE
+set.seed(123)
+m = LDA(articleDtm, method = "Gibbs", k = 6,  control = list(alpha = 0.1))
+m
 
-# Number of topics
-k <- 6
+#输出各个topic频率最高的词
+terms(m,10)
 
-# Run LDA using Gibbs sampling
-ldaOut <-LDA(articleDtm,k, method="Gibbs", control=list(nstart=nstart, seed = seed, best=best, burnin = burnin, iter = iter, thin=thin))
 
-# write out results
-# docs to topics
+# Top N terms in each topic  输出矩阵
+ldaOut.terms <- as.matrix(terms(m,740))
+write.csv(ldaOut.terms,file=paste("LDAGibbs",k=6,"TopicsToTerms.csv"))
 
-ldaOut.topics <- as.matrix(topics(ldaOut))
-write.csv(ldaOut.topics,file=paste("LDAGibbs",k,"DocsToTopics.csv"))
-
-# Top N terms in each topic
-ldaOut.terms <- as.matrix(terms(ldaOut,740))
-write.csv(ldaOut.terms,file=paste("LDAGibbs",k,"TopicsToTerms.csv"))
-
-# create the visualization
+# create the visualization beta图可视化
 library(tidytext)
 
-ap_topics <- tidy(ldaOut, matrix = "beta")
+ap_topics <- tidy(m, matrix = "beta")
 
 library(ggplot2)
 library(dplyr)
@@ -161,16 +150,6 @@ beta_spread <- ap_topics %>%
 write.csv(beta_spread,"beta_spread.csv")
 
 
-######关于LDA的另一种代码输入
-
-library(quantreg)
-
-set.seed(123)
-m = LDA(articleDtm, method = "Gibbs", k = 6,  control = list(alpha = 0.1))
-m
-
-#输出各个topic频率最高的词
-terms(m,10)
 
 #LDA可视化结果
 library(LDAvis)   
